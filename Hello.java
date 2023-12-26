@@ -1,5 +1,5 @@
 public class Hello {
-    public static void main(String[] args) {
-        System.out.println("Hello, Lambda!");
+    public String handleRequest(String input) {
+        return "Hello, Lambda!";
     }
 }
