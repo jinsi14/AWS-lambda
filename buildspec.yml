@@ -10,12 +10,12 @@ phases:
       - javac -cp . -d target Hello.java
       - echo "Zipping deployment package..."
       - cd target
-      - zip -r9 ../deployment_package.JAR .
+      - jar cvf ../deployment_package.jar *
       - cd ..
   post_build:
     commands:
       - echo "Uploading deployment package to S3..."
-      - aws s3 cp deployment_package.JAR s3://codepipeline-ap-south-1-538590669851/deployment_package.JAR
+      - aws s3 cp deployment_package.jar s3://codepipeline-ap-south-1-538590669851/deployment_package.jar
       - echo "Updating Lambda function..."
-      - aws lambda update-function-code --function-name lambda-deploy --s3-bucket codepipeline-ap-south-1-538590669851 --s3-key deployment_package.JAR
+      - aws lambda update-function-code --function-name lambda-deploy --s3-bucket codepipeline-ap-south-1-538590669851 --s3-key deployment_package.jar
       - echo "DONE!!"
