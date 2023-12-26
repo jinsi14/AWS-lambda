@@ -3,13 +3,19 @@ version: 0.2
 phases:
   install:
     runtime-versions:
-      java: corretto21
-
+      java: corretto17
   build:
     commands:
-      - cd C:\Users\prash\Desktop\pp\git\personal\my\AWS-lambda
-      - mvn clean install
-
+      - echo "Compiling Java code..."
+      - javac -cp . -d target Hello.java
+      - echo "Zipping deployment package..."
+      - cd target
+      - jar cvf ../deployment_package.jar *
+      - cd ..
   post_build:
     commands:
-      - aws lambda update-function-code --function-name lambda-deploye --zip-file fileb://target/YourProjectName-1.0-SNAPSHOT.jar
+      - echo "Uploading deployment package to S3..."
+      - aws s3 cp deployment_package.jar s3://codepipeline-ap-south-1-538590669851/deployment_package.jar
+      - echo "Updating Lambda function..."
+      - aws lambda update-function-code --function-name lambda-deploy --s3-bucket codepipeline-ap-south-1-538590669851 --s3-key deployment_package.jar
+      - echo "DONE!!"
