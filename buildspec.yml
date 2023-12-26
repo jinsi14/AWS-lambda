@@ -4,18 +4,11 @@ phases:
   install:
     runtime-versions:
       java: corretto21
+
   build:
     commands:
-      - echo "Compiling Java code..."
-      - javac -cp . -d target Hello.java
-      - echo "Zipping deployment package..."
-      - cd target
-      - jar cvf ../deployment_package.jar *
-      - cd ..
+      - mvn clean install
+
   post_build:
     commands:
-      - echo "Uploading deployment package to S3..."
-      - aws s3 cp deployment_package.jar s3://codepipeline-ap-south-1-538590669851/deployment_package.jar
-      - echo "Updating Lambda function..."
-      - aws lambda update-function-code --function-name lambda-deploy --s3-bucket codepipeline-ap-south-1-538590669851 --s3-key deployment_package.jar
-      - echo "DONE!!"
+      - aws lambda update-function-code --function-name lambda-deploye --zip-file fileb://target/YourProjectName-1.0-SNAPSHOT.jar
