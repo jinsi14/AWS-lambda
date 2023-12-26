@@ -7,7 +7,7 @@
     build:
       commands:
         - echo "Compiling Java code..."
-        - javac -d example ./*.java
+        - javac -d example example/*.java
         - zip -r9 ../deployment_package.jar *
     post_build:
       commands:
