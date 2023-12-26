@@ -20,5 +20,5 @@ phases:
       - echo "Uploading deployment package to S3..."
       - aws s3 cp deployment_package.zip s3://codepipeline-ap-south-1-538590669851/deployment_package.zip
       - echo "Updating Lambda function..."
-      - aws lambda update-function-code --function-name codecommit-lambda --s3-codepipeline-ap-south-1-538590669851 --s3-key deployment_package.zip
+      - aws lambda update-function-code --function-name codecommit-lambda --s3-bucket codepipeline-ap-south-1-538590669851 --s3-key deployment_package.zip
       - echo "DONE!!"
