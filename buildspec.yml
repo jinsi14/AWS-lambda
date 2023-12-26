@@ -1,19 +1,21 @@
 version: 0.2
+
 phases:
   install:
     runtime-versions:
-      python: 3.11
-    commands:
-      - echo "Installing dependencies..."
-      - pip install --upgrade pip setuptools
+      java: corretto11
   build:
     commands:
+      - echo "Compiling Java code..."
+      - javac -cp . -d target HelloLambda.java
       - echo "Zipping deployment package..."
-      - zip -r9 deployment_package.zip lambda_function.py
+      - cd target
+      - zip -r9 ../deployment_package.zip .
+      - cd ..
   post_build:
     commands:
       - echo "Uploading deployment package to S3..."
       - aws s3 cp deployment_package.zip s3://codepipeline-ap-south-1-538590669851/deployment_package.zip
       - echo "Updating Lambda function..."
-      - aws lambda update-function-code --function-name codecommit-lambda --s3-bucket codepipeline-ap-south-1-538590669851 --s3-key deployment_package.zip
+      - aws lambda update-function-code --function-name lambda-deploy --s3-bucket codepipeline-ap-south-1-538590669851 --s3-key deployment_package.zip
       - echo "DONE!!"
