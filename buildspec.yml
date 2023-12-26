@@ -1,18 +1,18 @@
-  version: 0.2
+version: 0.2
 
-  phases:
-    install:
-      runtime-versions:
-        java: corretto21
-    build:
-      commands:
-        - echo "Compiling Java code..."
-        - javac -d example ./*.java
-        - jar -r9 ../deployment_package.jar *
-    post_build:
-      commands:
-        - echo "Uploading deployment package to S3..."
-        - aws s3 cp ../deployment_package.jar s3://codepipeline-ap-south-1-538590669851/deployment_package.jar
-        - echo "Updating Lambda function..."
-        - aws lambda update-function-code --function-name lambda-deploy --s3-bucket codepipeline-ap-south-1-538590669851 --s3-key deployment_package.jar
-        - echo "DONE!!"
+phases:
+  install:
+    runtime-versions:
+      java: corretto21
+  build:
+    commands:
+      - echo "Compiling Java code..."
+      - javac -d . *.java
+      - zip -r9 ../deployment_package.jar *
+  post_build:
+    commands:
+      - echo "Uploading deployment package to S3..."
+      - aws s3 cp ../deployment_package.jar s3://codepipeline-ap-south-1-538590669851/deployment_package.jar
+      - echo "Updating Lambda function..."
+      - aws lambda update-function-code --function-name lambda-deploy --s3-bucket codepipeline-ap-south-1-538590669851 --s3-key deployment_package.jar
+      - echo "DONE!!"
